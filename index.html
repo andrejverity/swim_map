@@ -10,12 +10,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <style>
+        /* 1. The Universal Selector - Sets the font for EVERYTHING */
+        * { 
+           font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+         }
+        
         body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        #map { height: 100vh; width: 100%; background: #eef4f7; }
+        #map { height: 100vh; width: 100%; background: #ffffff; }
         
         /* Popup Styling */
         .swim-popup { min-width: 200px; }
-        .swim-popup h3 { margin: 0 0 5px 0; color: #0077be; font-size: 1.3em; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .swim-popup h3 { margin: 0 0 5px 0; color: #1a1a1a; font-family: sans-serif; font-weight: 700; font-size: 1.2em; border-bottom: 2px solid #0077be; padding-bottom: 5px; }
         .swim-popup p { margin: 5px 0; font-size: 0.9em; color: #333; }
         .swim-popup b { color: #555; }
         
@@ -37,7 +42,7 @@
 <script>
     const map = L.map('map').setView([0, 0], 2);
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '© OpenStreetMap'
     }).addTo(map);
 
@@ -57,7 +62,7 @@
                     const lng = parseFloat(row.Longitude);
                     
                     // Create Marker
-                    const marker = L.marker([lat, lng]).addTo(map);
+                    const marker = L.circleMarker([lat, lng], { radius: 8, fillColor: "#1a1a1a", color: "#0077be", weight: 2, fillOpacity: 0.9 }).addTo(map);
                     
                     // Build Popup with your specific fields
                     let popupContent = `
