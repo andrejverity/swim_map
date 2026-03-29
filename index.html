@@ -61,14 +61,13 @@
                     const lat = parseFloat(row.Latitude);
                     const lng = parseFloat(row.Longitude);
                     const swimIcon = L.icon({
-                        // *** NEW ENCODED SVG (RED OUTLINE/BLACK PIN/WHITE WAVES) ***
-                        iconUrl: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTIwIiB3aWR0aD0iMzAiIGhlaWdodD0iMzYiPgogICAgPCEtLSAxLiBQaW4gU2hhcGUgd2l0aCBCb2xkIFZlcml0eVRoaW5rIFJlZBPdXRsaW5lICgjYjUyYzFlKSwgRmlsbGVkIHdpdGggU29saWQgQmxhY2sgIzAwMDAwMCkgLS0+CiAgICA8cGF0aCBkPSJNNTAsMCBDMjIuNCwwIDAsMjIuNCAwLDUwIEMwLDc3LjYgMjIuNCwxMDAgNTAsMTIwIEM3Ny42LDEwMCAxMDAsNzcuNiAxMDAsNTAgQzEwMCwyMi40IDc3LjYsMCA1MCwwIFoiIHN0cm9rZT0iI2I1MmMxZSIgc3Ryb2tlLXdpZHRoPSI2IiBmaWxsPSIjMDAwMDAwIi8+CgogICAgPCEtLSAyLiBUaGUgVHdvIEludGVybmFsIFdhdmVzIChXaGl0ZSAjZmZmZmZmKSAtLT4KICAgIDwhLS0gVGhlc2UgYXJlIHBlcmZlY3RseSBjZW50ZXJlZCBhbmQgc3ltbWV0cmljYWwgLS0+CiAgICA8cGF0aCBkPSJNMjAsNTAgUTM1LDQwIDUwLDUwIFE2NSw2MCA4MCw1MCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogICAgPHBhdGggZDPSJNMjUsNjUgUTM3LjUsNTcuNSA1MCw2NSBRNjIuNSw3Mi41IDc1LDY1IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4=',
+    // RE-ENCODED VERITYTHINK PIN: Red Outline, Black Body, White Waves
+    iconUrl: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTIwIiB3aWR0aD0iMzAiIGhlaWdodD0iMzYiPgogIDxwYXRoIGQ9Ik01MCwwIEMyMi40LDAgMCwyMi40IDAsNTAgQzAsNzcuNiAyMi40LDEwMCA1MCwxMjAgQzc3LjYsMTAwIDEwMCw3Ny42IDEwMCw1MCBDMTAwLDIyLjQgNzcuNiwwIDUwLDAgWiIgc3Ryb2tlPSIjYjUyYzFlIiBzdHJva2Utd2lkdGg9IjYiIGZpbGw9IiMwMDAwMDAiLz4KICA8cGF0aCBkPSJNMjAsNTAgUTM1LDQwIDUwLDUwIFE2NSw2MCA4MCw1MCIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0yNSw2NSBRMzcuNSw1Ny41IDUwLDY1IFE2Mi41LDcyLjUgNzUsNjUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSI0IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+',
     
-                        // ANCHOR SETTINGS remain the same as the previous portrait pin
-                        iconSize: [30, 36],    // The width and height of your pin in pixels
-                        iconAnchor: [15, 36],   // Point [15, 36] is the exact bottom tip of the pin.
-                    popupAnchor: [0, -36]   // The popup will open directly above the pin (y=-36).
-                    });
+    iconSize: [30, 36],
+    iconAnchor: [15, 36],
+    popupAnchor: [0, -36]
+});
                     
                     // Create Marker
                     const marker = L.marker([lat, lng], { icon: swimIcon }).addTo(map);
