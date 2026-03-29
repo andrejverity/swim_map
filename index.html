@@ -60,15 +60,22 @@
                 if (row.Latitude && row.Longitude) {
                     const lat = parseFloat(row.Latitude);
                     const lng = parseFloat(row.Longitude);
-                    const swimIcon = L.icon({
-                        // FIXED: Added internal padding to prevent "clipping" on top and sides
-                        iconUrl: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9Ii01IC01IDExMCAxMzAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzNiI+CiAgPHBhdGggZD0iTTUwLDAgQzIyLjQsMCAwLDIyLjQgMCw1MCBDMCw3Ny42IDIyLjQsMTAwIDUwLDEyMCBDNzcuNiwxMDAgMTAwLDc3LjYgMTAwLDUwIEMxMDAsMjIuNCA3Ny42LDAgNTAsMCBaIiBzdHJva2U9IiNiNTJjMWUiIHN0cm9rZS13aWR0aD0iOCIgZmlsbD0iIzAwMDAwMCIvPgogIDxwYXRoIGQ9Ik0yNSw1NSBRMzUsNDUgNTAsNTUgUTY1LDY1IDc1LDU1IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTMwLDcwIFFNDAsNjIgNTAsNzAgUTYwLDc4IDcwLDcwIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPg==',
-                        
-                        // Increased display size slightly to compensate for the internal padding
-                        iconSize: [32, 38], 
-                        iconAnchor: [16, 38], // Anchored at bottom center
-                        popupAnchor: [0, -38]
-                    });
+const swimIcon = L.icon({
+    // This version uses a URL-friendly string instead of Base64
+    iconUrl: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 130" width="30" height="36">
+            <path d="M50,0 C22.4,0 0,22.4 0,50 C0,77.6 22.4,100 50,120 C77.6,100 100,77.6 100,50 C100,22.4 77.6,0 50,0 Z" 
+                  stroke="#b52c1e" stroke-width="8" fill="#000000"/>
+            <path d="M25,55 Q35,45 50,55 Q65,65 75,55" 
+                  stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <path d="M30,70 Q40,62 50,70 Q60,78 70,70" 
+                  stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/>
+        </svg>
+    `),
+    iconSize: [32, 38],
+    iconAnchor: [16, 38],
+    popupAnchor: [0, -38]
+});
                     
                     // Create Marker
                     const marker = L.marker([lat, lng], { icon: swimIcon }).addTo(map);
