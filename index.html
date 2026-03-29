@@ -25,13 +25,16 @@
         .swim-popup b { color: #555; }
         
         /* The Photo Styling */
-        .popup-photo { 
-            width: 100%; 
-            max-width: 250px; 
-            margin-top: 10px; 
-            border-radius: 5px; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+
+        .popup-photo {
+            width: 100%;
+            max-width: 250px; /* Adjust this to your preferred width */
+            height: auto;
             display: block;
+            margin: 10px auto 0 auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
         }
     </style>
 </head>
@@ -88,13 +91,15 @@ const swimIcon = L.icon({
                             <p><b>Watch:</b> ${row.Swim_Watch || row['Swim Watch']}</p>
                     `;
 
-                    // Only add the image tag if a Photo URL exists
-                    if (row.Photo && row.Photo.startsWith('http')) {
-                       // Adding 'onerror' tells the browser to hide the image if it fails to load
-    popupContent += `<img src="${row.Photo}" 
-                          class="popup-photo" 
-                          alt="Pool Photo" 
-                          onerror="this.style.display='none'">`;
+                    // Show photo
+                    if (row.Photo && row.Photo.trim() !== "") {
+                        // This combines your folder name with the filename from the spreadsheet
+                        const photoPath = "photos/" + row.Photo.trim();
+                        
+                        popupContent += `<img src="${photoPath}" 
+                                              class="popup-photo" 
+                                              alt="${row.Location}" 
+                                              onerror="this.style.display='none'">`;
                     }
 
                     popupContent += `</div>`;
