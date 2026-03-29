@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Swim Tracker</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        #map { height: 100vh; width: 100%; background: #eef4f7; }
+        
+        /* Popup Styling */
+        .swim-popup { min-width: 200px; }
+        .swim-popup h3 { margin: 0 0 5px 0; color: #0077be; font-size: 1.3em; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .swim-popup p { margin: 5px 0; font-size: 0.9em; color: #333; }
+        .swim-popup b { color: #555; }
+        
+        /* The Photo Styling */
+        .popup-photo { 
+            width: 100%; 
+            max-width: 250px; 
+            margin-top: 10px; 
+            border-radius: 5px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script>
+    const map = L.map('map').setView([0, 0], 2);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // REPLACE with your published CSV URL
+    const swimSheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQB7vY6xEFq5mjiSUXvjWCnsZCzokSm1TwtCSZTpafc3SRoC-ZBwn0OU2lca6k1enO410um8uyFci9D/pub?output=csv";
+
+    Papa.parse(swimSheetURL, {
+        download: true,
+        header: true,
+        complete: function(results) {
+            const points = [];
+            
+            results.data.forEach(row => {
+                // Check for Latitude and Longitude (Case Sensitive!)
+                if (row.Latitude && row.Longitude) {
+                    const lat = parseFloat(row.Latitude);
+                    const lng = parseFloat(row.Longitude);
+                    
+                    // Create Marker
+                    const marker = L.marker([lat, lng]).addTo(map);
+                    
+                    // Build Popup with your specific fields
+                    let popupContent = `
+                        <div class="swim-popup">
+                            <h3>${row.Location}</h3>
+                            <p><b>Date:</b> ${row.Date}</p>
+                            <p><b>Watch:</b> ${row.Swim_Watch || row['Swim Watch']}</p>
+                    `;
+
+                    // Only add the image tag if a Photo URL exists
+                    if (row.Photo && row.Photo.startsWith('http')) {
+                        popupContent += `<img src="${row.Photo}" class="popup-photo" alt="Pool Photo">`;
+                    }
+
+                    popupContent += `</div>`;
+                    
+                    marker.bindPopup(popupContent);
+                    points.push([lat, lng]);
+                }
+            });
+
+            if (points.length > 0) {
+                map.fitBounds(L.latLngBounds(points).pad(0.2));
+            }
+        }
+    });
+</script>
+</body>
+</html>
