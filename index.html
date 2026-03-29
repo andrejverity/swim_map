@@ -90,7 +90,11 @@ const swimIcon = L.icon({
 
                     // Only add the image tag if a Photo URL exists
                     if (row.Photo && row.Photo.startsWith('http')) {
-                        popupContent += `<img src="${row.Photo}" class="popup-photo" alt="Pool Photo">`;
+                       // Adding 'onerror' tells the browser to hide the image if it fails to load
+    popupContent += `<img src="${row.Photo}" 
+                          class="popup-photo" 
+                          alt="Pool Photo" 
+                          onerror="this.style.display='none'">`;
                     }
 
                     popupContent += `</div>`;
