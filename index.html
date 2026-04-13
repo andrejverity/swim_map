@@ -104,7 +104,11 @@ const swimIcon = L.icon({
 
                     popupContent += `</div>`;
                     
-                    marker.bindPopup(popupContent);
+                    .bindPopup(popupContent, {
+                        autoPan: true,
+                        autoPanPadding: L.point(10, 50), // This adds 50 pixels of "safety room" at the top
+                        closeButton: true
+                    });
                     points.push([lat, lng]);
                 }
             });
