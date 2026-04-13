@@ -26,6 +26,12 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         } /* Fixed extra brace here */
+
+        .leaflet-popup-content-wrapper {
+            max-height: 500px; /* Limits the popup height */
+            overflow-y: auto;  /* Adds scrollbar if content exceeds max-height */
+        }
+        
     </style>
 </head>
 <body>
@@ -85,7 +91,7 @@
                     // ATTACH popup to the marker (Fixed line below)
                     marker.bindPopup(popupContent, {
                         autoPan: true,
-                        autoPanPadding: L.point(10, 50),
+                        autoPanPadding: L.point(10, 120),  // Increased from 50 to 120
                         closeButton: true
                     });
 
