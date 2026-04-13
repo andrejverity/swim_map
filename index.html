@@ -4,38 +4,28 @@
     <title>My Swim Tracker</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-
     <style>
-        /* 1. The Universal Selector - Sets the font for EVERYTHING */
-        * { 
-           font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-         }
-        
-        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { margin: 0; padding: 0; }
         #map { height: 100vh; width: 100%; background: #ffffff; }
         
-        /* Popup Styling */
         .swim-popup { min-width: 200px; }
-        .swim-popup h3 { margin: 0 0 5px 0; color: #1a1a1a; font-family: sans-serif; font-weight: 700; font-size: 1.2em; border-bottom: 2px solid #0077be; padding-bottom: 5px; }
+        .swim-popup h3 { margin: 0 0 5px 0; color: #1a1a1a; font-weight: 700; font-size: 1.2em; border-bottom: 2px solid #0077be; padding-bottom: 5px; }
         .swim-popup p { margin: 5px 0; font-size: 0.9em; color: #333; }
         .swim-popup b { color: #555; }
         
-        /* The Photo Styling */
-
         .popup-photo {
             width: 100%;
-            max-width: 250px; /* Adjust this to your preferred width */
+            max-width: 250px;
             height: auto;
             display: block;
             margin: 10px auto 0 auto;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-        }
+        } /* Fixed extra brace here */
     </style>
 </head>
 <body>
@@ -44,71 +34,61 @@
 
 <script>
     const map = L.map('map').setView([0, 0], 2);
-
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // REPLACE with your published CSV URL
+    // SVG Icon defined once outside the loop for efficiency
+    const swimIcon = L.icon({
+        iconUrl: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 130" width="30" height="36">
+                <path d="M50,0 C22.4,0 0,22.4 0,50 C0,77.6 22.4,100 50,120 C77.6,100 100,77.6 100,50 C100,22.4 77.6,0 50,0 Z" stroke="#b52c1e" stroke-width="8" fill="#000000"/>
+                <path d="M25,55 Q35,45 50,55 Q65,65 75,55" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/>
+                <path d="M30,70 Q40,62 50,70 Q60,78 70,70" stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/>
+            </svg>
+        `),
+        iconSize: [32, 38],
+        iconAnchor: [16, 38],
+        popupAnchor: [0, -38]
+    });
+
     const swimSheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQB7vY6xEFq5mjiSUXvjWCnsZCzokSm1TwtCSZTpafc3SRoC-ZBwn0OU2lca6k1enO410um8uyFci9D/pub?output=csv";
 
     Papa.parse(swimSheetURL, {
         download: true,
         header: true,
+        skipEmptyLines: true,
         complete: function(results) {
             const points = [];
-            
             results.data.forEach(row => {
-                // Check for Latitude and Longitude (Case Sensitive!)
                 if (row.Latitude && row.Longitude) {
                     const lat = parseFloat(row.Latitude);
                     const lng = parseFloat(row.Longitude);
-const swimIcon = L.icon({
-    // This version uses a URL-friendly string instead of Base64
-    iconUrl: 'data:image/svg+xml;utf8,' + encodeURIComponent(`
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-5 -5 110 130" width="30" height="36">
-            <path d="M50,0 C22.4,0 0,22.4 0,50 C0,77.6 22.4,100 50,120 C77.6,100 100,77.6 100,50 C100,22.4 77.6,0 50,0 Z" 
-                  stroke="#b52c1e" stroke-width="8" fill="#000000"/>
-            <path d="M25,55 Q35,45 50,55 Q65,65 75,55" 
-                  stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/>
-            <path d="M30,70 Q40,62 50,70 Q60,78 70,70" 
-                  stroke="#ffffff" stroke-width="5" fill="none" stroke-linecap="round"/>
-        </svg>
-    `),
-    iconSize: [32, 38],
-    iconAnchor: [16, 38],
-    popupAnchor: [0, -38]
-});
                     
                     // Create Marker
                     const marker = L.marker([lat, lng], { icon: swimIcon }).addTo(map);
-                    
-                    // Build Popup with your specific fields
+
+                    // Build Popup
                     let popupContent = `
                         <div class="swim-popup">
                             <h3>${row.Location}</h3>
                             <p><b>Date:</b> ${row.Date}</p>
-                            <p><b>Watch:</b> ${row.Swim_Watch || row['Swim Watch']}</p>
+                            <p><b>Watch:</b> ${row.Swim_Watch || row['Swim Watch'] || 'N/A'}</p>
                     `;
 
-                    // Show photo
                     if (row.Photo && row.Photo.trim() !== "") {
-                        // This combines your folder name with the filename from the spreadsheet
                         const photoPath = "photos/" + row.Photo.trim();
-                        
-                        popupContent += `<img src="${photoPath}" 
-                                              class="popup-photo" 
-                                              alt="${row.Location}" 
-                                              onerror="this.style.display='none'">`;
+                        popupContent += `<img src="${photoPath}" class="popup-photo" alt="${row.Location}" onerror="this.style.display='none'">`;
                     }
-
                     popupContent += `</div>`;
-                    
-                    .bindPopup(popupContent, {
+
+                    // ATTACH popup to the marker (Fixed line below)
+                    marker.bindPopup(popupContent, {
                         autoPan: true,
-                        autoPanPadding: L.point(10, 50), // This adds 50 pixels of "safety room" at the top
+                        autoPanPadding: L.point(10, 50),
                         closeButton: true
                     });
+
                     points.push([lat, lng]);
                 }
             });
