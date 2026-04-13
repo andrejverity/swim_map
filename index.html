@@ -27,9 +27,26 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         } /* Fixed extra brace here */
 
+        /* 1. Limit the height of the white popup box */
         .leaflet-popup-content-wrapper {
-            max-height: 500px; /* Limits the popup height */
-            overflow-y: auto;  /* Adds scrollbar if content exceeds max-height */
+            max-height: 500px; /* Adjust this if you want it shorter */
+            overflow-y: auto !important;
+            border-radius: 8px;
+        }
+        
+        /* 2. Fix the image so it doesn't "stretch" the popup too fast */
+        .popup-photo {
+            width: 100%;
+            height: auto;
+            max-height: 250px; /* Constrains the image specifically */
+            object-fit: cover;
+            display: block;
+            margin-top: 10px;
+        }
+        
+        /* 3. Ensure the text inside doesn't get cut off */
+        .swim-popup {
+            padding-right: 5px; /* Space for the scrollbar */
         }
         
     </style>
@@ -91,7 +108,7 @@
                     // ATTACH popup to the marker (Fixed line below)
                     marker.bindPopup(popupContent, {
                         autoPan: true,
-                        autoPanPadding: L.point(10, 120),  // Increased from 50 to 120
+                        autoPanPadding: L.point(10, 100),  // Changed from 120 to 100 for safety
                         closeButton: true
                     });
 
